@@ -32,7 +32,7 @@ function Home() {
       ))}
 
       {/* Message */}
-      <div className="relative z-10 text-center px-4 mt-70 mb-6">
+      <div className="relative z-10 flex flex-col justify-center text-center px-4 flex-1">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-pink-700 mb-2">
           Hi Jade!
         </h1>
@@ -47,24 +47,46 @@ function Home() {
         </p>
       </div>
 
+      <button
+        onClick={() => window.location.href = "steam://run/412220"}
+        className="fixed bottom-40 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-[#32a86d] hover:bg-[#2a8f5f] text-white px-6 py-3 rounded-full shadow-lg z-20 animate-pulse"
+      >
+        <img src="/steam.svg" className="w-5 h-5" />
+        Launch DDNet
+      </button>
+
+
+
       {/* Left image */}
       <img
         src="/tee/teeleftside.png"
         alt="left decoration"
-        className="pointer-events-none fixed left-10 bottom-20 w-48 md:w-64 opacity-90 z-0"
+        className="pointer-events-none fixed left-10 bottom-30 w-48 md:w-64 opacity-90 z-0"
+      />
+      {/* Left flag */}
+      <img
+        src="/flags/mexico.png"
+        alt="left flag"
+        className="pointer-events-none fixed left-20 bottom-10 w-20 md:w-24 opacity-90 z-0"
       />
 
       {/* Right image */}
       <img
         src="/tee/teerightside.png"
         alt="right decoration"
-        className="pointer-events-none fixed right-10 bottom-20 w-48 md:w-64 opacity-90 z-0"
+        className="pointer-events-none fixed right-10 bottom-30 w-48 md:w-64 opacity-90 z-0"
+      />
+      {/* Right flag */}
+      <img
+        src="/flags/usa.png"
+        alt="right flag"
+        className="pointer-events-none fixed right-20 bottom-10 w-20 md:w-24 opacity-90 z-0"
       />
 
 
       {/* Up Arrow to Letter Page */}
       <button
-        onClick={() => navigate("/jaan")}
+        onClick={() => navigate("/timer")}
         className="text-pink-500 hover:!text-[#2a8f5f] text-3xl animate-bounce mb-25"
       >
         ↑

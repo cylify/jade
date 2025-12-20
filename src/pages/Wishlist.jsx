@@ -1,34 +1,49 @@
 import React, { useState, useEffect, useRef } from "react";
 import { db } from "../firebase";
-import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+  onSnapshot
+} from "firebase/firestore";
+
+const TYPE_OPTIONS = [
+  { value: "memory", label: "Memory" },
+  { value: "place", label: "Place" },
+  { value: "song", label: "Song" },
+  { value: "idea", label: "Idea" },
+  { value: "gift", label: "Gift (small)" }
+];
 
 function Wishlist() {
-  const [wishes, setWishes] = useState([]);
-  const [newWish, setNewWish] = useState({
+  const [items, setItems] = useState([]);
+  const [newItem, setNewItem] = useState({
     title: "",
     description: "",
-    imageUrl: "",
     link: "",
+    type: "memory",
+    // Keeping your existing DB field name so you don't have to migrate:
     isGifted: false
   });
+
   const [showForm, setShowForm] = useState(false);
-  const [activeTab, setActiveTab] = useState("wishes");
+  const [activeTab, setActiveTab] = useState("now"); // "now" | "saved"
   const [menuOpenId, setMenuOpenId] = useState(null);
 
-  const wishesCollectionRef = collection(db, "wishes");
+  const colRef = collection(db, "wishes");
   const titleInputRef = useRef(null);
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(wishesCollectionRef, (snapshot) => {
-      setWishes(snapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    const unsubscribe = onSnapshot(colRef, (snapshot) => {
+      setItems(snapshot.docs.map((d) => ({ ...d.data(), id: d.id })));
     });
     return () => unsubscribe();
   }, []);
 
   useEffect(() => {
-    if (showForm && titleInputRef.current) {
-      titleInputRef.current.focus();
-    }
+    if (showForm && titleInputRef.current) titleInputRef.current.focus();
   }, [showForm]);
 
   useEffect(() => {
@@ -39,201 +54,254 @@ function Wishlist() {
     return () => window.removeEventListener("keydown", handleEsc);
   }, []);
 
-  const addWish = async (e) => {
+  const closeForm = () => {
+    setShowForm(false);
+    setNewItem({
+      title: "",
+      description: "",
+      link: "",
+      type: "memory",
+      isGifted: false
+    });
+  };
+
+  const addItem = async (e) => {
     e.preventDefault();
-    await addDoc(wishesCollectionRef, newWish);
+    await addDoc(colRef, {
+      ...newItem,
+      createdAt: Date.now()
+    });
     closeForm();
   };
 
-  const closeForm = () => {
-    setShowForm(false);
-    setNewWish({ title: "", description: "", imageUrl: "", link: "", isGifted: false });
-  };
-
-  const editWish = async (id, currentTitle, currentDescription) => {
-    const updatedTitle = prompt("Enter new title:", currentTitle);
-    const updatedDescription = prompt("Enter new description:", currentDescription);
+  const editItem = async (id, currentTitle, currentDescription) => {
+    const updatedTitle = prompt("Edit title:", currentTitle);
+    const updatedDescription = prompt("Edit note:", currentDescription);
 
     if (updatedTitle !== null && updatedDescription !== null) {
-      const wishDoc = doc(db, "wishes", id);
-      await updateDoc(wishDoc, {
+      await updateDoc(doc(db, "wishes", id), {
         title: updatedTitle,
         description: updatedDescription
       });
     }
   };
 
-  const deleteWish = async (id) => {
-    const wishDoc = doc(db, "wishes", id);
-    await deleteDoc(wishDoc);
+  const deleteItem = async (id) => {
+    await deleteDoc(doc(db, "wishes", id));
   };
 
-  const markGifted = async (id, currentStatus) => {
-    const wishDoc = doc(db, "wishes", id);
-    await updateDoc(wishDoc, { isGifted: !currentStatus });
+  const toggleSaved = async (id, currentStatus) => {
+    // still using isGifted under the hood
+    await updateDoc(doc(db, "wishes", id), { isGifted: !currentStatus });
   };
 
-  const fetchImageFromLink = async () => {
-    if (!newWish.link) {
-      alert("Please enter a product link first.");
-      return;
-    }
-    try {
-      const res = await fetch(`https://api.microlink.io?url=${encodeURIComponent(newWish.link)}`);
-      const data = await res.json();
-      const imageUrl = data.data.image.url;
-      setNewWish({ ...newWish, imageUrl });
-      alert("Image fetched!");
-    } catch (error) {
-      console.error(error);
-      alert("Failed to fetch image.");
-    }
-  };
+  const filtered =
+    activeTab === "now"
+      ? items.filter((x) => !x.isGifted)
+      : items.filter((x) => x.isGifted);
 
-  const filteredWishes = activeTab === "wishes" ? wishes.filter(w => !w.isGifted) : wishes.filter(w => w.isGifted);
+  const typeLabel = (value) =>
+    TYPE_OPTIONS.find((t) => t.value === value)?.label ?? "Note";
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-pink-100 to-pink-200 p-4 font-sans">
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-3xl font-bold text-pink-600">Your Wishlist</h2>
-        <button
-          onClick={() => setShowForm(true)}
-          className="bg-pink-400 hover:bg-pink-500 text-white font-medium px-3 py-1 rounded text-sm"
-        >
-          Add Wish
-        </button>
-      </div>
-
-      <div className="flex justify-center mb-6 relative">
-        <div className="absolute bottom-0 w-full h-px bg-pink-300 shadow-inner"></div>
-
-        {/* Wishes Tab */}
-        <button
-          onClick={() => setActiveTab("wishes")}
-          className={`relative px-4 py-2 font-medium focus:outline-none focus:ring-0 ${
-            activeTab === "wishes"
-              ? "text-pink-600 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-pink-500 after:shadow after:rounded-full"
-              : "text-pink-500 hover:text-pink-600"
-          }`}
-          style={{ backgroundColor: "transparent", outline: "none", boxShadow: "none", border: "none"}}
-        >
-          Wishes
-        </button>
-
-        {/* Gifted Tab */}
-        <button
-          onClick={() => setActiveTab("gifted")}
-          className={`relative px-4 py-2 font-medium focus:outline-none focus:ring-0 ${
-            activeTab === "gifted"
-              ? "text-pink-600 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-pink-500 after:shadow after:rounded-full"
-              : "text-pink-500 hover:text-pink-600"
-          }`}
-          style={{ backgroundColor: "transparent", outline: "none", boxShadow: "none", border: "none"}}
-        >
-          Gifted
-        </button>
-
-      </div>
-
-
-      {/* Wishes Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-4 gap-6">
-        {filteredWishes.map((wish) => (
-          <div key={wish.id} className="bg-white border border-pink-200 rounded-lg p-4 shadow relative min-w-60 min-h-50">
-            {/* Three dots menu */}
-            <div className="absolute top-2 right-2">
-              <button
-                onClick={() => setMenuOpenId(wish.id === menuOpenId ? null : wish.id)}
-                className="cursor-pointer text-gray-500 text-xs hover:text-pink-400 focus:outline-none bg-transparent border-none shadow-none p-0 m-0"
-                style={{ background: "none" }}
-              >
-                •••
-              </button>
-
-              {menuOpenId === wish.id && (
-                <div className="absolute right-0 mt-2 w-28 bg-white border border-gray-200 rounded shadow z-10">
-                  <button onClick={() => deleteWish(wish.id)} className="w-full text-left text-red-500 px-3 py-1 hover:bg-red-50 text-sm bg-transparent">Delete Wish</button>
-                </div>
-              )}
-            </div>
-
-            <h3 className="text-lg font-bold text-pink-600 mb-1">{wish.title}</h3>
-            <p className="text-gray-700 mb-1 text-sm">{wish.description}</p>
-            {wish.imageUrl && <img src={wish.imageUrl} alt={wish.title} className="w-full rounded mb-1" />}
-            {wish.link && <p><a href={wish.link} target="_blank" rel="noreferrer" className="text-pink-500 underline text-sm">Product Link</a></p>}
-
-            <div className="flex gap-2 mt-2">
-              <button onClick={() => editWish(wish.id, wish.title, wish.description)} className="bg-gray-900 px-2 py-1 rounded text-xs text-white hover:text-pink-300">Edit</button>
-              <button
-                onClick={() => markGifted(wish.id, wish.isGifted)}
-                className={`px-2 py-1 rounded text-xs ${wish.isGifted ? "bg-gray-900 text-white hover:text-pink-300" : "bg-gray-900 text-white hover:text-pink-300"}`}
-              >
-                {wish.isGifted ? "Unmark" : "Gifted"}
-              </button>
-            </div>
+    <div className="min-h-screen w-full bg-gradient-to-b from-pink-100 to-pink-200 p-6 font-sans">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+          <div>
+            <h2 className="text-3xl font-bold text-pink-700">Little Things</h2>
+            <p className="text-sm text-gray-700 mt-1 max-w-2xl">
+              This isn’t about buying anything. It’s just how I remember.
+            </p>
           </div>
-        ))}
-      </div>
 
-      {showForm && (
-        <div className="fixed inset-0 bg-opacity-10 backdrop-blur-sm flex justify-center items-center z-50 transition-opacity duration-300 ease-out">
-          <div className="bg-white p-6 rounded shadow max-w-md w-full relative">
-            <button
-              onClick={closeForm}
-              className="absolute top-2 right-2 text-gray-600 hover:text-pink-300"
-            >
-              ✕
-            </button>
-
-            <h3 className="text-2xl font-bold mb-4 text-pink-600">Add a Wish</h3>
-
-            <form onSubmit={addWish} className="space-y-3">
-              <input
-                ref={titleInputRef}
-                type="text"
-                placeholder="Title"
-                value={newWish.title}
-                onChange={(e) => setNewWish({ ...newWish, title: e.target.value })}
-                required
-                className="w-full border border-pink-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-pink-200 text-gray-800"
-              />
-              <input
-                type="text"
-                placeholder="Description"
-                value={newWish.description}
-                onChange={(e) => setNewWish({ ...newWish, description: e.target.value })}
-                className="w-full border border-pink-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-pink-200 text-gray-800"
-              />
-              <input
-                type="text"
-                placeholder="Product Link"
-                value={newWish.link}
-                onChange={(e) => setNewWish({ ...newWish, link: e.target.value })}
-                className="w-full border border-pink-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-pink-200 text-gray-800"
-              />
-
-              <button
-                type="button"
-                onClick={fetchImageFromLink}
-                className="w-full bg-pink-400 hover:bg-pink-500 text-white font-semibold py-2 rounded"
-              >
-                Fetch Image From Link
-              </button>
-
-              {newWish.imageUrl && (
-                <img src={newWish.imageUrl} alt="Preview" className="w-32 mx-auto mt-2 rounded" />
-              )}
-
-              <button
-                type="submit"
-                className="w-full bg-pink-400 hover:bg-pink-500 text-white font-semibold py-2 rounded"
-              >
-                Add Wish
-              </button>
-            </form>
-          </div>
+          <button
+            onClick={() => setShowForm(true)}
+            className="bg-[#32a86d] hover:bg-[#2a8f5f] text-white font-semibold px-4 py-2 rounded-full shadow transition"
+          >
+            Add
+          </button>
         </div>
-      )}
+
+        {/* Tabs */}
+        <div className="flex justify-center mb-8 relative">
+          <div className="absolute bottom-0 w-full h-px bg-pink-300/70" />
+
+          <button
+            onClick={() => setActiveTab("now")}
+            className={`relative px-4 py-2 font-medium bg-transparent border-none ${
+              activeTab === "now"
+                ? "text-pink-700 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-pink-600 after:rounded-full"
+                : "text-pink-500 hover:text-pink-700"
+            }`}
+          >
+            Now
+          </button>
+
+          <button
+            onClick={() => setActiveTab("saved")}
+            className={`relative px-4 py-2 font-medium bg-transparent border-none ${
+              activeTab === "saved"
+                ? "text-pink-700 font-bold after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-pink-600 after:rounded-full"
+                : "text-pink-500 hover:text-pink-700"
+            }`}
+          >
+            Saved
+          </button>
+        </div>
+
+        {/* Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filtered.map((item) => (
+            <div
+              key={item.id}
+              className="bg-white/85 backdrop-blur border border-pink-200 rounded-2xl p-5 shadow-sm relative"
+            >
+              {/* menu */}
+              <div className="absolute top-3 right-3">
+                <button
+                  onClick={() =>
+                    setMenuOpenId(item.id === menuOpenId ? null : item.id)
+                  }
+                  className="cursor-pointer text-gray-500 text-sm hover:text-pink-500 bg-transparent border-none"
+                >
+                  •••
+                </button>
+
+                {menuOpenId === item.id && (
+                  <div className="absolute right-0 mt-2 w-36 bg-white border border-gray-200 rounded-xl shadow z-10 overflow-hidden">
+                    <button
+                      onClick={() => deleteItem(item.id)}
+                      className="w-full text-left text-red-600 px-4 py-2 hover:bg-red-50 text-sm bg-transparent"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              {/* type badge */}
+              <div className="text-xs text-[#32a86d] font-semibold mb-2">
+                {typeLabel(item.type)}
+              </div>
+
+              <h3 className="text-lg font-bold text-pink-700 mb-2">
+                {item.title}
+              </h3>
+
+              {item.description && (
+                <p className="text-gray-700 text-sm leading-relaxed mb-3">
+                  {item.description}
+                </p>
+              )}
+
+              {/* link (optional, subtle) */}
+              {item.link && (
+                <a
+                  href={item.link}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-sm text-pink-600 hover:text-pink-800 underline underline-offset-4"
+                >
+                  reference
+                </a>
+              )}
+
+              <div className="flex gap-2 mt-4">
+                <button
+                  onClick={() => editItem(item.id, item.title, item.description)}
+                  className="px-3 py-1.5 rounded-full text-xs bg-gray-900 text-white hover:text-pink-200 transition"
+                >
+                  Edit
+                </button>
+
+                <button
+                  onClick={() => toggleSaved(item.id, item.isGifted)}
+                  className="px-3 py-1.5 rounded-full text-xs bg-gray-900 text-white hover:text-pink-200 transition"
+                >
+                  {item.isGifted ? "Unsave" : "Save"}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Modal */}
+        {showForm && (
+          <div className="fixed inset-0 bg-black/10 backdrop-blur-sm flex justify-center items-center z-50">
+            <div className="bg-white p-6 rounded-2xl shadow-lg max-w-md w-full relative">
+              <button
+                onClick={closeForm}
+                className="absolute top-3 right-3 text-gray-600 hover:text-pink-500"
+              >
+                ✕
+              </button>
+
+              <h3 className="text-2xl font-bold mb-2 text-pink-700">
+                Add a little thing
+              </h3>
+              <p className="text-sm text-gray-700 mb-4">
+                A memory, a place, a song, an idea—anything I don’t want to forget.
+              </p>
+
+              <form onSubmit={addItem} className="space-y-3">
+                <select
+                  value={newItem.type}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, type: e.target.value })
+                  }
+                  className="w-full border border-pink-200 rounded-xl px-3 py-2 focus:outline-none focus:ring focus:ring-pink-200 text-gray-800"
+                >
+                  {TYPE_OPTIONS.map((t) => (
+                    <option key={t.value} value={t.value}>
+                      {t.label}
+                    </option>
+                  ))}
+                </select>
+
+                <input
+                  ref={titleInputRef}
+                  type="text"
+                  placeholder="Title (short)"
+                  value={newItem.title}
+                  onChange={(e) => setNewItem({ ...newItem, title: e.target.value })}
+                  required
+                  className="w-full border border-pink-200 rounded-xl px-3 py-2 focus:outline-none focus:ring focus:ring-pink-200 text-gray-800"
+                />
+
+                <textarea
+                  placeholder="Note (optional)"
+                  value={newItem.description}
+                  onChange={(e) =>
+                    setNewItem({ ...newItem, description: e.target.value })
+                  }
+                  rows={3}
+                  className="w-full border border-pink-200 rounded-xl px-3 py-2 focus:outline-none focus:ring focus:ring-pink-200 text-gray-800"
+                />
+
+                <input
+                  type="text"
+                  placeholder="Reference link (optional)"
+                  value={newItem.link}
+                  onChange={(e) => setNewItem({ ...newItem, link: e.target.value })}
+                  className="w-full border border-pink-200 rounded-xl px-3 py-2 focus:outline-none focus:ring focus:ring-pink-200 text-gray-800"
+                />
+
+                <button
+                  type="submit"
+                  className="w-full bg-[#32a86d] hover:bg-[#2a8f5f] text-white font-semibold py-2.5 rounded-xl shadow transition"
+                >
+                  Add
+                </button>
+              </form>
+            </div>
+          </div>
+        )}
+
+        <p className="mt-10 text-center text-xs text-gray-600">
+          You don’t owe me anything for knowing these. (You practically told me all of this anyways)
+        </p>
+      </div>
     </div>
   );
 }

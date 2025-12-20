@@ -85,7 +85,7 @@ function Drawing() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-gradient-to-b from-pink-100 to-pink-200 p-8 flex flex-col items-center font-serif">
+    <div className="min-h-screen w-full bg-gradient-to-b from-pink-100 to-pink-200 p-8 flex flex-col items-center font-sans">
       <h2 className="text-3xl font-bold text-pink-600 mb-4">Drawing Pad</h2>
       <p className="mb-8">DOODLING!!</p>
 

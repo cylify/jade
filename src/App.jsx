@@ -15,6 +15,11 @@ import Yap from "./pages/Yap";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Drawing from "./pages/Drawing";
+import MySinging from "./pages/MySinging";
+import Timer from "./pages/Timer";
+import Empty from "./pages/Empty";
+import Last from "./pages/Last";
+
 
 
 function App() {
@@ -44,6 +49,10 @@ function AnimatedRoutes() {
         <Route path="/login" element={<PageWrapper><Login /></PageWrapper>} />
         <Route path="/register" element={<PageWrapper><Register /></PageWrapper>} />
         <Route path="/drawing" element={<PageWrapper><Drawing /></PageWrapper>} />
+        <Route path="/mysinging" element={<PageWrapper><MySinging /></PageWrapper>} />
+        <Route path="/timer" element={<PageWrapper><Timer /></PageWrapper>} />
+        <Route path="/empty" element={<PageWrapper><Empty /></PageWrapper>} />
+        <Route path="/last" element={<PageWrapper><Last /></PageWrapper>} />
       </Routes>
     </AnimatePresence>
   );

@@ -46,7 +46,7 @@ function Yap() {
   const addYap = async (e) => {
     e.preventDefault();
     if (!newYap) {
-      alert("Please enter your poem or thought.");
+      alert("Please enter your thought.");
       return;
     }
 
