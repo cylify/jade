@@ -77,7 +77,7 @@ function MySinging() {
               <br />
               I just wanted you to have it.
               <br />
-              I tried my best okay?
+              I tried my best singing okay?
             </p>
 
             <button
