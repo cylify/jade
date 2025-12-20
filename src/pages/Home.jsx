@@ -87,7 +87,7 @@ function Home() {
       {/* Up Arrow to Letter Page */}
       <button
         onClick={() => navigate("/timer")}
-        className="text-pink-500 hover:!text-[#2a8f5f] text-3xl animate-bounce mb-25"
+        className="text-pink-500 hover:!text-[#2a8f5f] text-3xl animate-bounce mb-15"
       >
         ↑
       </button>
