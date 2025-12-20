@@ -44,7 +44,7 @@ function Todo() {
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-pink-100 to-pink-200 p-4 font-sans">
       <h2 className="text-3xl font-bold text-pink-600 mb-6 text-center">To-do 📝</h2>
-      <p className="text-xm font-bold text-pink-600 mb-6 text-center">Things for US TO DO</p>
+      <p className="text-xm font-bold text-pink-600 mb-6 text-center">Things for US TO DO (I know probably not the best to hear this right now)</p>
 
       {/* Add Todo Form */}
       <form onSubmit={addTodo} className="bg-white p-4 rounded shadow mb-6 max-w-md mx-auto space-y-3">

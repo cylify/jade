@@ -20,19 +20,36 @@ function Login() {
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <input type="email" placeholder="Email"
-          value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Password"
-          value={password} onChange={(e) => setPassword(e.target.value)} required />
-        <button type="submit">Login</button>
-      </form>
-      <p>Don’t have an account? <Link to="/register">Register</Link></p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-pink-100 to-pink-200 font-sans">
+      <div className="bg-white p-8 rounded shadow max-w-md w-full">
+        <h2 className="text-3xl font-bold text-pink-600 mb-6 text-center">Welcome Back</h2>
+        <form onSubmit={handleLogin} className="space-y-4">
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            className="w-full border border-pink-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-pink-200"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            className="w-full border border-pink-300 rounded px-3 py-2 focus:outline-none focus:ring focus:ring-pink-200"
+          />
+          <button
+            type="submit"
+            className="w-full bg-pink-400 hover:bg-pink-500 text-white font-semibold py-2 rounded"
+          >
+            Login
+          </button>
+        </form>
+      </div>
     </div>
   );
-  
 }
 
 export default Login;

@@ -2,19 +2,44 @@ import React, { useState, useRef } from "react";
 
 const songs = [
   {
-    name: "Perfect",
-    artist: "Ed Sheeran",
-    url: "/songs/perfect.mp3",
+    name: "Spin Bout U",
+    artist: "Drake, 21 Savage",
+    url: "/songs/spin_bout_u.mp3",
   },
   {
-    name: "Say You Won't Let Go",
-    artist: "James Arthur",
-    url: "/songs/say_you_wont_let_go.mp3",
+    name: "Marvin's Room",
+    artist: "Drake",
+    url: "/songs/marvins_room.mp3",
   },
   {
     name: "All of Me",
     artist: "John Legend",
     url: "/songs/all_of_me.mp3",
+  },
+  {
+    name: "again",
+    artist: "Gunna",
+    url: "/songs/again.mp3",
+  },
+  {
+    name: "Everlong",
+    artist: "Foo Fighters",
+    url: "/songs/everlong.mp3",
+  },
+  {
+    name: "Still into You",
+    artist: "Paramore",
+    url: "/songs/everlong.mp3",
+  },
+  {
+    name: "Bad Bad Bad",
+    artist: "Young Thug, Lil Baby",
+    url: "/songs/badbadbad.mp3",
+  },
+  {
+    name: "One Last Time",
+    artist: "Ariana Grande",
+    url: "/songs/one_last_time.mp3",
   },
 ];
 

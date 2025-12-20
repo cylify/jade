@@ -94,7 +94,6 @@ function Wishlist() {
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-pink-100 to-pink-200 p-4 font-sans">
-      {/* Header */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-3xl font-bold text-pink-600">Your Wishlist</h2>
         <button
@@ -105,9 +104,7 @@ function Wishlist() {
         </button>
       </div>
 
-      {/* Tabs */}
       <div className="flex justify-center mb-6 relative">
-        {/* Background line */}
         <div className="absolute bottom-0 w-full h-px bg-pink-300 shadow-inner"></div>
 
         {/* Wishes Tab */}
@@ -178,7 +175,6 @@ function Wishlist() {
         ))}
       </div>
 
-      {/* Modal Form */}
       {showForm && (
         <div className="fixed inset-0 bg-opacity-10 backdrop-blur-sm flex justify-center items-center z-50 transition-opacity duration-300 ease-out">
           <div className="bg-white p-6 rounded shadow max-w-md w-full relative">

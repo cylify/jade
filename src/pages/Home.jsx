@@ -1,13 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Footer from "../components/Footer";
 
 function Home() {
   const navigate = useNavigate();
   const petals = Array.from({ length: 30 });
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-b from-pink-100 to-pink-200 flex flex-col items-center">
+    <div className="z-0 min-h-screen overflow-hidden bg-gradient-to-b from-pink-100 to-pink-200 flex flex-col items-center">
       {/* Petals */}
       {petals.map((_, i) => (
         <div
@@ -35,22 +34,42 @@ function Home() {
       {/* Message */}
       <div className="relative z-10 text-center px-4 mt-70 mb-6">
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-pink-700 mb-2">
-          My Dearest Angela
+          Hi Jade!
         </h1>
         <p className="text-pink-600 text-lg sm:text-xl max-w-xl mx-auto">
-          You are my beautiful rose, my forever garden of love. My wife to be. May this always remind you of how cherished you are every day.
+          Merry Christmas!
+        </p>
+        <p className="text-pink-600 text-lg sm:text-xl max-w-xl mx-auto">
+          This is my Christmas present for you, although I would have preferred to give something else
+        </p>
+        <p className="text-pink-600 text-lg sm:text-xl max-w-xl mx-auto">
+          Happy Holidays!
         </p>
       </div>
 
+      {/* Left image */}
+      <img
+        src="/tee/teeleftside.png"
+        alt="left decoration"
+        className="pointer-events-none fixed left-10 bottom-20 w-48 md:w-64 opacity-90 z-0"
+      />
+
+      {/* Right image */}
+      <img
+        src="/tee/teerightside.png"
+        alt="right decoration"
+        className="pointer-events-none fixed right-10 bottom-20 w-48 md:w-64 opacity-90 z-0"
+      />
+
+
       {/* Up Arrow to Letter Page */}
       <button
-        onClick={() => navigate("/letter")}
-        className="text-pink-500 hover:text-pink-300 text-3xl animate-bounce mb-25"
+        onClick={() => navigate("/jaan")}
+        className="text-pink-500 hover:!text-[#2a8f5f] text-3xl animate-bounce mb-25"
       >
         ↑
       </button>
 
-      <Footer />
 
       {/* Keyframes */}
       <style>

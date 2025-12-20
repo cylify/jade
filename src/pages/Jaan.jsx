@@ -22,7 +22,7 @@ I wish for that only
     <div className="min-h-screen w-full bg-gradient-to-b from-pink-100 to-pink-200 p-16 flex justify-center items-center font-serif">
       <div className="bg-white bg-opacity-80 p-6 rounded shadow max-w-xl w-full">
         <h2 className="text-3xl font-bold text-pink-600 mb-4 text-center">Jaan</h2>
-        <p className="text-xl text-center mb-6">A poem to you, my Angela.</p>
+        <p className="text-xl text-center mb-6">A poem to you</p>
         <pre className="whitespace-pre-wrap text-gray-800 text-center leading-relaxed">
           {poem}
         </pre>
