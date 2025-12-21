@@ -2,6 +2,11 @@ import React, { useState, useRef } from "react";
 
 const songs = [
   {
+    name: "Love in December",
+    artist: "Club 8",
+    url: "/songs/love_in_december.mp3",
+  },
+  {
     name: "Spin Bout U",
     artist: "Drake, 21 Savage",
     url: "/songs/spin_bout_u.mp3",
