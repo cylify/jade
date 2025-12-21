@@ -22,7 +22,7 @@ function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-pink-100 to-pink-200 font-sans">
       <div className="bg-white p-8 rounded shadow max-w-md w-full">
-        <h2 className="text-3xl font-bold text-pink-600 mb-6 text-center">Welcome Back</h2>
+        <h2 className="text-3xl font-bold text-pink-600 mb-6 text-center">Welcome!</h2>
         <form onSubmit={handleLogin} className="space-y-4">
           <input
             type="email"
