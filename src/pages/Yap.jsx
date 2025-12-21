@@ -185,7 +185,7 @@ function Yap() {
               <div className="absolute top-2 right-2 flex space-x-2">
                 <button
                   onClick={() => toggleShare(yap)}
-                  className="text-blue-500 hover:text-blue-600 text-sm"
+                  className="!text-[#32a86d] hover:!text-[#2a8f5f] text-sm"
                 >
                   {yap.shared ? "Unshare" : "Share"}
                 </button>
