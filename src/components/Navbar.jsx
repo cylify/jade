@@ -30,9 +30,8 @@ return (
         <Link to="/wishlist" className="!text-[#32a86d] hover:!text-[#2a8f5f] font-medium no-underline !text-[#32a86d]">Little Things</Link>
         <Link to="/pictures" className="!text-[#32a86d] hover:!text-[#2a8f5f] font-medium no-underline !text-[#32a86d]">Gallery</Link>
         <Link to="/todo" className="!text-[#32a86d] hover:!text-[#2a8f5f] font-medium no-underline !text-[#32a86d]">To-do</Link>
-        <Link to="/yap" className="!text-[#32a86d] hover:!text-[#2a8f5f] font-medium no-underline !text-[#32a86d]">Yap</Link>
         <Link to="/drawing" className="!text-[#32a86d] hover:!text-[#2a8f5f] font-medium no-underline !text-[#32a86d]">Draw</Link>
-
+        
         <div className="relative">
           <button
             onClick={() => setMenuOpen(!menuOpen)}
