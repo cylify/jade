@@ -9,12 +9,11 @@ import {
   updateDoc,
   query,
   where,
-  orderBy,
+  serverTimestamp,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
 
 const yapsCollectionRef = collection(db, "yaps");
-
 const ADI_UID = "1Gvr1MdzC9e6ovjIHD9HVLjdfhl2";
 
 function Yap() {
@@ -29,40 +28,41 @@ function Yap() {
         return;
       }
 
-      // User's own yaps
-      const ownQuery = query(
-        yapsCollectionRef,
-        where("ownerUid", "==", user.uid),
-        orderBy("timestamp", "desc")
-      );
+      const ownQuery = query(yapsCollectionRef, where("ownerUid", "==", user.uid));
 
-      // Only yaps that are shared TO Adi
       const sharedToAdiQuery = query(
         yapsCollectionRef,
         where("shared", "==", true),
-        where("sharedToUid", "==", ADI_UID),
-        orderBy("timestamp", "desc")
+        where("sharedToUid", "==", ADI_UID)
       );
 
-      const ownUnsub = onSnapshot(ownQuery, (snapshot) => {
-        const own = snapshot.docs.map((d) => ({ ...d.data(), id: d.id }));
+      const ownUnsub = onSnapshot(
+        ownQuery,
+        (snapshot) => {
+          const own = snapshot.docs.map((d) => ({ ...d.data(), id: d.id }));
 
-        setYaps((prev) => {
-          const sharedOthers = prev.filter(
-            (y) => y.ownerUid !== user.uid && y.sharedToUid === ADI_UID && y.shared === true
-          );
-          return [...own, ...sharedOthers];
-        });
-      });
+          setYaps((prev) => {
+            const sharedOthers = prev.filter(
+              (y) => y.ownerUid !== user.uid && y.sharedToUid === ADI_UID && y.shared === true
+            );
+            return [...own, ...sharedOthers];
+          });
+        },
+        (err) => console.error("OWN query snapshot error:", err)
+      );
 
-      const sharedUnsub = onSnapshot(sharedToAdiQuery, (snapshot) => {
-        const shared = snapshot.docs.map((d) => ({ ...d.data(), id: d.id }));
+      const sharedUnsub = onSnapshot(
+        sharedToAdiQuery,
+        (snapshot) => {
+          const shared = snapshot.docs.map((d) => ({ ...d.data(), id: d.id }));
 
-        setYaps((prev) => {
-          const own = prev.filter((y) => y.ownerUid === user.uid);
-          return [...own, ...shared];
-        });
-      });
+          setYaps((prev) => {
+            const own = prev.filter((y) => y.ownerUid === user.uid);
+            return [...own, ...shared];
+          });
+        },
+        (err) => console.error("SHARED query snapshot error:", err)
+      );
 
       return () => {
         ownUnsub();
@@ -73,19 +73,20 @@ function Yap() {
     return () => unsubscribeAuth();
   }, []);
 
-  // Merge duplicates cleanly (in case a doc appears in both lists)
+  // Merge duplicates and sort newest-first safely
   const mergedYaps = useMemo(() => {
     const map = new Map();
     for (const y of yaps) map.set(y.id, y);
-    return Array.from(map.values()).sort((a, b) => {
-      const aMs =
-        a.timestamp?.toMillis?.() ??
-        (a.timestamp?.seconds ? a.timestamp.seconds * 1000 : 0);
-      const bMs =
-        b.timestamp?.toMillis?.() ??
-        (b.timestamp?.seconds ? b.timestamp.seconds * 1000 : 0);
-      return bMs - aMs;
-    });
+
+    const toMs = (t) => {
+      if (!t) return 0;
+      if (typeof t.toMillis === "function") return t.toMillis(); // Firestore Timestamp
+      if (t.seconds) return t.seconds * 1000; // Timestamp-like
+      const d = new Date(t);
+      return Number.isNaN(d.getTime()) ? 0 : d.getTime();
+    };
+
+    return Array.from(map.values()).sort((a, b) => toMs(b.timestamp) - toMs(a.timestamp));
   }, [yaps]);
 
   const addYap = async (e) => {
@@ -102,8 +103,8 @@ function Yap() {
     }
 
     await addDoc(yapsCollectionRef, {
-      text: newYap,
-      timestamp: new Date(),
+      text: newYap.trim(),
+      timestamp: serverTimestamp(),
       ownerUid: auth.currentUser.uid,
       shared: share,
       sharedToUid: share ? ADI_UID : null,
