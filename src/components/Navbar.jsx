@@ -12,6 +12,9 @@ function Navbar() {
   const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const hideOnRoutes = ["/login", "/register"];
+  if (hideOnRoutes.includes(location.pathname)) return null;
+
   const handleLogout = async () => {
     await signOut(auth);
     navigate("/login");

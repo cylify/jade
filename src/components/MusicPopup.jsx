@@ -46,6 +46,11 @@ const songs = [
     artist: "Ariana Grande",
     url: "/songs/one_last_time.mp3",
   },
+  {
+    name: "From A Man",
+    artist: "Young Thug",
+    url: "/songs/from_a_man.mp3",
+  },
 ];
 
 function MusicPopup() {
