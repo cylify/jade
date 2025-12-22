@@ -29,8 +29,8 @@ I wish for that only
           {poem}
         </pre>
       </div>
-      <p className="mt-6 !text-[#32a86d] text-xs sm:text-xs max-w-xl text-center">
-        It might be early, might be infatuation to you, might be anything.  But I know my feelings.
+      <p className="mt-6 !text-[#32a86d] text-xs sm:text-xs max-w-xl text-center font-sans">
+        I didn't know love had a colour till I saw your beautiful eyes.
       </p>
       <p className="mt-6 !text-[#32a86d] text-xs sm:text-xs max-w-xl text-center">
         December 2025
