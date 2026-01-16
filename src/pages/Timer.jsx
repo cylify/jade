@@ -4,9 +4,6 @@ import { useNavigate } from "react-router-dom";
 function Timer() {
   const navigate = useNavigate();
 
-  // ✅ Set the moment you want the timer to start from.
-  // Change this to the date/time you told her you'd wait, or any meaningful moment.
-  // Example: Dec 20, 2025 at midnight Toronto time (-05:00)
   const START_ISO = "2025-12-18T09:25:00-05:00";
 
   const startDate = useMemo(() => new Date(START_ISO), []);
@@ -30,7 +27,6 @@ function Timer() {
 
   const totalDays = Math.floor(totalHours / 24);
 
-  // Optional: show years/months-ish (approx) without heavy date libs
   const years = Math.floor(totalDays / 365);
   const daysRemainder = totalDays % 365;
 
