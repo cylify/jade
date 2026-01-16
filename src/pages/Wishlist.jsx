@@ -24,12 +24,11 @@ function Wishlist() {
     description: "",
     link: "",
     type: "memory",
-    // Keeping your existing DB field name so you don't have to migrate:
     isGifted: false
   });
 
   const [showForm, setShowForm] = useState(false);
-  const [activeTab, setActiveTab] = useState("now"); // "now" | "saved"
+  const [activeTab, setActiveTab] = useState("now");
   const [menuOpenId, setMenuOpenId] = useState(null);
 
   const colRef = collection(db, "wishes");
