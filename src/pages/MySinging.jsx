@@ -10,7 +10,6 @@ function MySinging() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [canAutoplay, setCanAutoplay] = useState(false);
 
-  // Try autoplay (usually blocked until user interaction).
   useEffect(() => {
     const tryAutoplay = async () => {
       if (!audioRef.current) return;
@@ -19,7 +18,6 @@ function MySinging() {
         setIsPlaying(true);
         setCanAutoplay(true);
       } catch {
-        // Autoplay blocked — normal.
         setCanAutoplay(false);
       }
     };
@@ -35,7 +33,7 @@ function MySinging() {
         await a.play();
         setIsPlaying(true);
       } catch {
-        // If something goes wrong, just do nothing.
+        // If something goes wrong, just do nothing
       }
     } else {
       a.pause();
@@ -62,7 +60,6 @@ function MySinging() {
               {isPlaying ? "Pause" : "Play"}
             </button>
 
-            {/* Optional hint if autoplay is blocked */}
             {!canAutoplay && !isPlaying && (
               <p className="text-xs text-gray-600">
                 (Your browser might block autoplay, press play.)
