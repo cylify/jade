@@ -241,7 +241,7 @@ function Wishlist() {
                 Add a little thing
               </h3>
               <p className="text-sm text-gray-700 mb-4">
-                A memory, a place, a song, an idea—anything I don’t want to forget.
+                A memory, a place, a song, an idea, anything I don’t want to forget.
               </p>
 
               <form onSubmit={addItem} className="space-y-3">
