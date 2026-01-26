@@ -40,13 +40,13 @@ function Home() {
           Happy Valentine's Day
         </p>
         <p className="text-pink-600 text-lg sm:text-xl max-w-xl mx-auto">
-          I am keeping my promise I made to you, maybe you don't remember it but I do
+          I know things haven't been great between us.
         </p>
         <p className="text-pink-600 text-lg sm:text-xl max-w-xl mx-auto">
-          No hard drugs and slow down the smoking okay?
+          But I am in love with you, I want to love you better.
         </p>
         <p className="text-pink-600 text-lg sm:text-xl max-w-xl mx-auto">
-          Have an amazing time!
+          I love you always. I want to be your safe space.  I'm going to be better for you.
         </p>
       </div>
 
