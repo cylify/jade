@@ -24,7 +24,6 @@ function Wishlist() {
     description: "",
     link: "",
     type: "memory",
-    // Keeping your existing DB field name so you don't have to migrate:
     isGifted: false
   });
 
