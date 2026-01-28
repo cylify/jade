@@ -137,7 +137,7 @@ function Yap() {
         A private place to put your thoughts.
         <br />
         <span className="font-normal text-pink-500">
-          I can’t see anything unless you choose “Share this with Adi”.
+          I can’t see anything unless you choose to share it.
         </span>
       </p>
 
