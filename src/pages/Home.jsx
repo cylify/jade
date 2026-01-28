@@ -43,10 +43,10 @@ function Home() {
           I know things haven't been great between us.
         </p>
         <p className="text-pink-600 text-lg sm:text-xl max-w-xl mx-auto">
-          But I am in love with you, I want to love you better.
+          But if someone were to ask, how much do I think of you, I would say once.
         </p>
         <p className="text-pink-600 text-lg sm:text-xl max-w-xl mx-auto">
-          I love you always. I want to be your safe space.  I'm going to be better for you.
+          You came into my mind and never left.
         </p>
       </div>
 
