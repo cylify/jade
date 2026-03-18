@@ -37,16 +37,16 @@ function Home() {
           Hi Jade!
         </h1>
         <p className="text-pink-600 text-lg sm:text-xl max-w-xl mx-auto">
-          Happy Valentine's Day
+          Hi Jade
         </p>
         <p className="text-pink-600 text-lg sm:text-xl max-w-xl mx-auto">
-          I know things haven't been great between us.
+          I'm sorry for not treating you good enough, I should have done better
         </p>
         <p className="text-pink-600 text-lg sm:text-xl max-w-xl mx-auto">
-          But if someone were to ask, how much do I think of you, I would say once.
+          I will always keep you in my heart for as long as I am alive
         </p>
         <p className="text-pink-600 text-lg sm:text-xl max-w-xl mx-auto">
-          You came into my mind and never left.
+          Thank you for everything.
         </p>
       </div>
 
